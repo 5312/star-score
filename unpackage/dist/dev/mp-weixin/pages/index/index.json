@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "评星评级",
+  "usingComponents": {
+    "u-avatar": "/uview-ui/components/u-avatar/u-avatar",
+    "star-rating": "/components/star-rating/star-rating",
+    "u-upload": "/uview-ui/components/u-upload/u-upload",
+    "u-skeleton": "/uview-ui/components/u-skeleton/u-skeleton"
+  }
+}

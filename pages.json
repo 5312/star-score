@@ -1,0 +1,38 @@
+{
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "评星评级"
+			}
+		}
+	    ,{
+            "path" : "pages/auth/auth",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "评星评级",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/evaluate/evaluate",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "评星评级",
+		"navigationBarBackgroundColor": "#4463f0",
+		"backgroundColor": "#F8F8F8"
+	}
+}

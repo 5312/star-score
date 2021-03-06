@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/auth/auth",
+    "pages/evaluate/evaluate"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "评星评级",
+    "navigationBarBackgroundColor": "#4463f0",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {}
+}

@@ -266,13 +266,12 @@ var _default =
   },
   onLoad: function onLoad(option) {
     var q = option.q ? decodeURIComponent(option.q) : null;
-    // console.log(option)
+
     if (option.shopid) {
       this.shop_id = option.shopid;
       this.authSet();
       return;
-    }
-    if (q) {
+    } else if (q) {
       var a = q.split('?')[1];
       if (a && a.length > 0) {
         var b = a.split('=');
@@ -282,6 +281,11 @@ var _default =
           this.authSet();
         }
       }
+    } else {
+      //评价
+      uni.reLaunch({
+        url: "../list/list" });
+
     }
   },
   methods: {

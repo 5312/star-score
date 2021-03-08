@@ -17,4 +17,7 @@
 	/*每个页面公共css */
 	@import "uview-ui/index.scss"; 
 	@import url("/common/all.scss")
+	// page{
+	// 	// font-family:''
+	// }
 </style>

@@ -31,6 +31,15 @@
 	display: -webkit-flex;
 	display: flex;
 }
+.j-around{
+	-webkit-justify-content: space-around;
+	        justify-content: space-around;
+}
+.j-between{
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	        justify-content: space-between;
+}
 .j-center{
 	-webkit-box-pack: center;
 	-webkit-justify-content: center;
@@ -50,6 +59,9 @@
 	-webkit-box-align:center;
 	-webkit-align-items:center;
 	        align-items:center;
+}
+.hover{
+	background-color: #f1f1f1;
 }
 .u-relative,
 .u-rela {

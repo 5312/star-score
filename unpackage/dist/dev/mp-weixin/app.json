@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/auth/auth",
-    "pages/evaluate/evaluate"
+    "pages/evaluate/evaluate",
+    "pages/list/list"
   ],
   "subPackages": [],
   "window": {
@@ -11,6 +12,5 @@
     "navigationBarBackgroundColor": "#4463f0",
     "backgroundColor": "#F8F8F8"
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap51.json"
+  "usingComponents": {}
 }

@@ -8365,6 +8365,9 @@ function getCode() {return _getCode.apply(this, arguments);}function _getCode() 
     },
     list: function list(data) {
       return minHttp.get("/api/shopping/lists", data, load);
+    },
+    shop: function shop(data) {
+      return minHttp.get("/api/shop/lists", data, load);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

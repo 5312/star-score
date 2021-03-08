@@ -110,6 +110,9 @@ export default {
 		},
 		list(data){
 			return minHttp.get(`/api/shopping/lists`,data,load)
+		},
+		shop(data){
+			return minHttp.get(`/api/shop/lists`,data,load)
 		}
 	}
 }

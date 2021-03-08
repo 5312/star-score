@@ -28,7 +28,7 @@
         {
           "name": "pages/index/index",
           "pathName": "pages/index/index",
-          "query": "shopid=10001",
+          "query": "",
           "scene": null
         }
       ]

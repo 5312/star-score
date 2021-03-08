@@ -1,6 +1,12 @@
 .flex{
 	display: flex;
 }
+.j-around{
+	justify-content: space-around;
+}
+.j-between{
+	justify-content: space-between;
+}
 .j-center{
 	justify-content: center;
 }
@@ -12,4 +18,7 @@
 }
 .a-center{
 	align-items:center;
+}
+.hover{
+	background-color: #f1f1f1;
 }

@@ -93,7 +93,7 @@
 				</view>
 			</view>
 			<view class="more">
-					<u-loadmore :status="status"  :load-text="loadText" @loadmore='loadmore' />
+					<u-loadmore margin-top='20rpx' margin-bottom='20rpx' :status="status"  :load-text="loadText" @loadmore='loadmore' />
 			</view>
 			
 		</view>

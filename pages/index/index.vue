@@ -102,13 +102,12 @@
 		},
 		onLoad(option) {
 			let q = option.q ? decodeURIComponent(option.q) : null;
-			// console.log(option)
+			
 			if(option.shopid){
 				this.shop_id = option.shopid
 				this.authSet()
 				return
-			}
-			if (q) {
+			}else if (q) {
 				let a = q.split('?')[1]
 				if (a && a.length > 0) {
 					let b = a.split('=')
@@ -118,6 +117,11 @@
 						this.authSet()
 					}
 				}
+			}else{
+				//评价
+				uni.reLaunch({
+				    url: `../list/list`,
+				});
 			}
 		}, 
 		methods: {

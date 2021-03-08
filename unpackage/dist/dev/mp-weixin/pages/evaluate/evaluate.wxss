@@ -156,6 +156,6 @@
   margin: 10rpx;
 }
 .main .people .more {
-  padding: 30rpx 0;
+  padding: 60rpx 0;
 }
 

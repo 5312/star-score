@@ -23,7 +23,7 @@
 				</view>
 				<view class="pai">
 					<image :src="jinpai" mode=""></image>
-					<text class="font-lg"  :style="{ color:'#ec9a05' }">金牌</text>
+					<text class="font-lg"  :style="{ color:'#ec9a05' }">{{ type }}</text>
 				</view>
 			</view>
 		</view>
@@ -83,7 +83,14 @@
 				<view class="content">
 					<view class="text">{{ x.msg}}</view>
 					<view class="imgbox flex  a-center">
-						<image class="img" :src="'https://xishui.ydeshui.com/'+item" mode="" v-for="item,i in x.images.split(',')" :key='i'>{{}}</image>
+						<image 
+							class="img" 
+							:src="'https://xishui.ydeshui.com/'+item" 
+							mode="" 
+							v-for="item,i in images(x)" 
+							:key='i'
+							@click="preview(x,i)"
+						></image>
 						<!-- {{x.images.split(',')[0]}} -->
 					</view>
 					
@@ -93,7 +100,7 @@
 				</view>
 			</view>
 			<view class="more">
-					<u-loadmore margin-top='20rpx' margin-bottom='20rpx' :status="status"  :load-text="loadText" @loadmore='loadmore' />
+					<u-loadmore  :status="status"  :load-text="loadText" @loadmore='loadmore' />
 			</view>
 			
 		</view>
@@ -105,6 +112,7 @@
 		data() {
 			return {
 				status:'loadmore',
+				type:"",
 				loadText: {
 					loadmore: '点击加载更多',
 					loading: '努力加载中',
@@ -145,11 +153,32 @@
 			this.admin_f = options.admin_f
 			this.jinpai = options.jinpai;
 			this.shop_id = options.shopid;
+			this.type = options.type
 			// 获取数据
 			this.getDetail(this.page)
 			
-		}, 
+		},
+		computed:{
+			images:function(){
+				return function(x){
+					if(x.images){
+						return x.images.split(',')
+					}
+				}
+			}
+		},
 		methods: {
+			preview(src,index){
+				let srcs = src.images.split(',');
+				srcs.forEach((x,y) => {
+					srcs[y] = 'https://xishui.ydeshui.com/'+x
+				})
+				// // 预览图片
+				uni.previewImage({
+					current:index,
+					urls: srcs,
+				});
+			},
 			loadmore(){
 				this.page+=1;
 				
@@ -352,7 +381,7 @@ $tag-bg-select:#fa3534;
 			}
 		}
 		.more{
-			padding:30rpx 0;
+			padding:60rpx 0;
 		}
 	}
 }

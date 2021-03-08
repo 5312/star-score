@@ -209,9 +209,9 @@ var _default =
     rankImage: function rankImage(e) {
       return function (x) {
         var sum = x.net_f + x.admin_f;
-        if (sum > 80) return '../../static/star-rating/jinpai.png';
-        if (sum > 70 && sum < 79) return '../../static/star-rating/yinpai.png';
-        if (sum > 60 && sum < 69) return '../../static/star-rating/tongse.png';
+        if (sum >= 80) return '../../static/star-rating/jinpai.png';
+        if (sum >= 70 && sum <= 79) return '../../static/star-rating/yinpai.png';
+        if (sum >= 60 && sum <= 69) return '../../static/star-rating/tongse.png';
         if (sum < 60) return '../../static/star-rating/heipai.png';
       };
     } },

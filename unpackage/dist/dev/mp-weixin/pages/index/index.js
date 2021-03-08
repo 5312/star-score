@@ -96,16 +96,22 @@ var components
 try {
   components = {
     uAvatar: function() {
-      return __webpack_require__.e(/*! import() | uview-ui/components/u-avatar/u-avatar */ "uview-ui/components/u-avatar/u-avatar").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-avatar/u-avatar.vue */ 68))
+      return __webpack_require__.e(/*! import() | uview-ui/components/u-avatar/u-avatar */ "uview-ui/components/u-avatar/u-avatar").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-avatar/u-avatar.vue */ 76))
+    },
+    uGap: function() {
+      return __webpack_require__.e(/*! import() | uview-ui/components/u-gap/u-gap */ "uview-ui/components/u-gap/u-gap").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-gap/u-gap.vue */ 104))
     },
     starRating: function() {
-      return __webpack_require__.e(/*! import() | components/star-rating/star-rating */ "components/star-rating/star-rating").then(__webpack_require__.bind(null, /*! @/components/star-rating/star-rating.vue */ 75))
+      return __webpack_require__.e(/*! import() | components/star-rating/star-rating */ "components/star-rating/star-rating").then(__webpack_require__.bind(null, /*! @/components/star-rating/star-rating.vue */ 83))
     },
     uUpload: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-upload/u-upload */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-upload/u-upload")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-upload/u-upload.vue */ 82))
+      return Promise.all(/*! import() | uview-ui/components/u-upload/u-upload */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-upload/u-upload")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-upload/u-upload.vue */ 90))
+    },
+    uButton: function() {
+      return __webpack_require__.e(/*! import() | uview-ui/components/u-button/u-button */ "uview-ui/components/u-button/u-button").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 161))
     },
     uSkeleton: function() {
-      return __webpack_require__.e(/*! import() | uview-ui/components/u-skeleton/u-skeleton */ "uview-ui/components/u-skeleton/u-skeleton").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-skeleton/u-skeleton.vue */ 89))
+      return __webpack_require__.e(/*! import() | uview-ui/components/u-skeleton/u-skeleton */ "uview-ui/components/u-skeleton/u-skeleton").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-skeleton/u-skeleton.vue */ 97))
     }
   }
 } catch (e) {
@@ -236,6 +242,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 var _default =
 {
   data: function data() {
@@ -259,11 +266,25 @@ var _default =
       logoSrc: '', // 头像
       msg: '', // 评价
       loading: true, // 是否显示骨架屏组件
-      jinpai: '', // 金牌
+      jinpai: '', // 金牌路径
+      type: "",
       action: 'https://xishui.ydeshui.com/index.php?s=/api/shopping/base64',
       upload: [] };
 
   },
+  computed: {
+    types: function types() {
+      console.log(this.scoreNum);
+      if (this.scoreNum && this.punctualNum && this.serviceNum && this.peop && this.safe && this.ambient && this.msg) {
+        return 'primary';
+      } else {
+        return 'default';
+      }
+
+    } },
+
+
+
   onLoad: function onLoad(option) {
     var q = option.q ? decodeURIComponent(option.q) : null;
 
@@ -288,7 +309,11 @@ var _default =
 
     }
   },
+  onShareAppMessage: function onShareAppMessage() {
+
+  },
   methods: {
+
     remove: function remove(index, lists, name) {
       this.upload.splice(index, 1);
       // console.log(this.upload)
@@ -312,7 +337,7 @@ var _default =
     evaluate: function evaluate() {
       //评价
       uni.navigateTo({
-        url: "../evaluate/evaluate?net_f=".concat(this.detail.net_f, "&admin_f=").concat(this.detail.admin_f, "&jinpai=").concat(this.jinpai, "&shopid=").concat(this.shop_id) });
+        url: "../evaluate/evaluate?net_f=".concat(this.detail.net_f, "&admin_f=").concat(this.detail.admin_f, "&jinpai=").concat(this.jinpai, "&shopid=").concat(this.shop_id, "&type=").concat(this.type) });
 
     },
     alls: function alls() {
@@ -333,10 +358,22 @@ var _default =
       var sum = this.detail.net_f + this.detail.admin_f;
       this.all = sum + '分';
 
-      if (sum > 80) this.jinpai = '../../static/star-rating/jinpai.png';
-      if (sum > 70 && sum < 79) this.jinpai = '../../static/star-rating/yinpai.png';
-      if (sum > 60 && sum < 69) this.jinpai = '../../static/star-rating/tongse.png';
-      if (sum < 60) this.jinpai = '../../static/star-rating/heipai.png';
+      if (sum >= 80) {
+        this.type = '金牌';
+        this.jinpai = '../../static/star-rating/jinpai.png';
+      };
+      if (sum >= 70 && sum <= 79) {
+        this.type = '银牌';
+        this.jinpai = '../../static/star-rating/yinpai.png';
+      }
+      if (sum >= 60 && sum <= 69) {
+        this.type = '铜牌';
+        this.jinpai = '../../static/star-rating/tongse.png';
+      }
+      if (sum < 60) {
+        this.type = '黑牌';
+        this.jinpai = '../../static/star-rating/heipai.png';
+      }
 
     },
     authSet: function authSet() {//授权状态判断
@@ -384,12 +421,24 @@ var _default =
       });
 
     },
-    submit: function submit() {
+    submit: function submit() {var _this2 = this;
       // 提交
       var that = this;
-      // // this.$refs.uUpload.upload();
-      console.log(this.upload);
-      // // return;
+      if (this.scoreNum == 0 || this.punctualNum == 0 || this.serviceNum == 0 || this.peop == 0 || this.safe == 0 || this.ambient == 0) {
+        uni.showToast({
+          title: "请评价商家",
+          icon: 'none' });
+
+        return;
+      }
+      if (!this.msg) {
+        uni.showToast({
+          title: '请填写评论',
+          icon: 'none' });
+
+        return;
+      }
+
       this.$api.add({
         shop_id: that.shop_id,
         msg: that.msg,
@@ -409,7 +458,11 @@ var _default =
           complete: function complete() {
             setTimeout(function () {
               uni.hideToast();
-            }, 30000);
+              //评价
+              uni.navigateTo({
+                url: "../evaluate/evaluate?net_f=".concat(_this2.detail.net_f, "&admin_f=").concat(_this2.detail.admin_f, "&jinpai=").concat(_this2.jinpai, "&shopid=").concat(_this2.shop_id, "&type=").concat(_this2.type) });
+
+            }, 3000);
           } });
 
       });

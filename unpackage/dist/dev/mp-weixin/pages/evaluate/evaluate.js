@@ -129,7 +129,7 @@ var render = function() {
   var l1 = _vm.__map(_vm.group, function(x, y) {
     var $orig = _vm.__get_orig(x)
 
-    var l0 = x.images.split(",")
+    var l0 = _vm.images(x)
     return {
       $orig: $orig,
       l0: l0
@@ -177,7 +177,14 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -284,6 +291,7 @@ var _default =
   data: function data() {
     return {
       status: 'loadmore',
+      type: "",
       loadText: {
         loadmore: '点击加载更多',
         loading: '努力加载中',
@@ -324,11 +332,32 @@ var _default =
     this.admin_f = options.admin_f;
     this.jinpai = options.jinpai;
     this.shop_id = options.shopid;
+    this.type = options.type;
     // 获取数据
     this.getDetail(this.page);
 
   },
+  computed: {
+    images: function images() {
+      return function (x) {
+        if (x.images) {
+          return x.images.split(',');
+        }
+      };
+    } },
+
   methods: {
+    preview: function preview(src, index) {
+      var srcs = src.images.split(',');
+      srcs.forEach(function (x, y) {
+        srcs[y] = 'https://xishui.ydeshui.com/' + x;
+      });
+      // // 预览图片
+      uni.previewImage({
+        current: index,
+        urls: srcs });
+
+    },
     loadmore: function loadmore() {
       this.page += 1;
 
@@ -372,6 +401,7 @@ var _default =
       this.group = []; // 清空
       this.getDetail(this.page);
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

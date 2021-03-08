@@ -20,6 +20,7 @@
 				</view> -->
 			</view>
 		</view>
+		<u-gap height="20" bg-color="#fff"></u-gap>
 		<view class="content">
 
 			<view class="star-rating-box">
@@ -63,7 +64,7 @@
 			</view>
 			<view class="btn">
 				<!-- <button v-if="auth" open-type="getUserInfo" @getuserinfo='bindGetUserInfo' class="logoin" type="default" size="mini">点我登录</button> -->
-				<button  class="btnn" type="default" @click="submit" size="mini">提交评价</button>
+				<u-button   :type="types" @click="submit" size="mini">提交评价</u-button>
 			</view>
 			<view class="bottom">主办单位:习水县市场监督管理局</view>
 		</view>
@@ -95,10 +96,24 @@
 				logoSrc:'',// 头像
 				msg:'',// 评价
 				loading: true, // 是否显示骨架屏组件
-				jinpai:'',// 金牌
+				jinpai:'',// 金牌路径
+				type:"",
 				action: 'https://xishui.ydeshui.com/index.php?s=/api/shopping/base64',
 				upload:[],
 			};
+		},
+		computed:{
+			types(){
+				console.log(this.scoreNum)
+				if(this.scoreNum && this.punctualNum && this.serviceNum && this.peop && this.safe && this.ambient && this.msg ){
+					return 'primary'
+				}else{
+					return 'default'
+				}
+				
+			}
+			
+			
 		},
 		onLoad(option) {
 			let q = option.q ? decodeURIComponent(option.q) : null;
@@ -124,7 +139,11 @@
 				});
 			}
 		}, 
+		onShareAppMessage (){
+			
+		},
 		methods: {
+			
 			remove(index,lists,name){
 				this.upload.splice(index,1);
 				// console.log(this.upload)
@@ -148,7 +167,7 @@
 			evaluate(){
 				//评价
 				uni.navigateTo({
-				    url: `../evaluate/evaluate?net_f=${this.detail.net_f}&admin_f=${this.detail.admin_f}&jinpai=${this.jinpai}&shopid=${this.shop_id}`,
+				    url: `../evaluate/evaluate?net_f=${this.detail.net_f}&admin_f=${this.detail.admin_f}&jinpai=${this.jinpai}&shopid=${this.shop_id}&type=${this.type}`,
 				});
 			},
 			alls(){
@@ -169,10 +188,22 @@
 				let sum = this.detail.net_f + this.detail.admin_f;
 				this.all = sum + '分';
 				
-				if(sum > 80) this.jinpai = '../../static/star-rating/jinpai.png';
-				if(sum > 70 && sum < 79) this.jinpai = '../../static/star-rating/yinpai.png';
-				if(sum > 60 && sum < 69) this.jinpai = '../../static/star-rating/tongse.png';
-				if(sum < 60) this.jinpai = '../../static/star-rating/heipai.png';
+				if(sum >= 80) {
+					this.type='金牌';
+					 this.jinpai = '../../static/star-rating/jinpai.png';
+				};
+				if(sum >= 70 && sum <= 79){
+					 this.type = '银牌'; 
+					 this.jinpai = '../../static/star-rating/yinpai.png';
+				}
+				if(sum >= 60 && sum <= 69){
+					 this.type = '铜牌'; 
+					 this.jinpai = '../../static/star-rating/tongse.png';
+				}
+				if(sum < 60) {
+					this.type = '黑牌'; 
+					this.jinpai = '../../static/star-rating/heipai.png';
+				}
 
 			},
 			authSet(){//授权状态判断
@@ -223,9 +254,21 @@
 			submit(){
 				// 提交
 				let that = this;
-				// // this.$refs.uUpload.upload();
-				console.log(this.upload)
-				// // return;
+				if(this.scoreNum ==0 || this.punctualNum==0||this.serviceNum==0||this.peop==0||this.safe==0||this.ambient==0){
+					uni.showToast({
+						title:"请评价商家",
+						icon:'none'
+					})
+					return
+				}
+				if(!this.msg){
+					uni.showToast({
+						title:'请填写评论',
+						icon:'none'
+					})
+					return
+				}
+				
 				this.$api.add({
 					shop_id:that.shop_id,
 					msg:that.msg,
@@ -245,7 +288,11 @@
 						complete: () => {
 							setTimeout(() => {
 								uni.hideToast();
-							}, 30000)
+								//评价
+								uni.navigateTo({
+								    url: `../evaluate/evaluate?net_f=${this.detail.net_f}&admin_f=${this.detail.admin_f}&jinpai=${this.jinpai}&shopid=${this.shop_id}&type=${this.type}`,
+								});
+							}, 3000)
 						}
 					});
 				})
@@ -267,11 +314,11 @@ page{
 		width: 100%;
 		height: 100%;
 		.tops {
-			height: 30%;
+			height: 32%;
 			text-align: center;
 			background-color: $blue;
 			padding:20rpx;
-			margin-bottom: 20rpx;
+			// margin-bottom: 20rpx;
 			.logo {
 				width: 200rpx;
 				height: 200rpx;
@@ -288,9 +335,12 @@ page{
 					width: 30rpx;
 					height: 30rpx;
 					font-weight: 700;
-					margin-right: 20rpx;
 				}
 				.addtext{
+					// max-width: 600rpx;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 					font-size: $uni-font-size-sm;
 					color: #b8b9e6;
 				}
@@ -346,10 +396,14 @@ page{
 					background-color:$uni-color-error;
 					color: #fff;
 				}
-				.btnn{
-					background-color: #4463f0;
-					color: #fff;
-				}
+				// .color{
+				// 	background-color: #4463f0;
+				// 	color: #fff;
+				// }
+				// .btnn{
+				// 	background-color:$uni-bg-color-grey;
+				// 	// color: #fff;
+				// }
 			}
 			.bottom{
 				text-align: center;

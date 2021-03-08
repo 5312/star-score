@@ -2,8 +2,10 @@
   "navigationBarTitleText": "评星评级",
   "usingComponents": {
     "u-avatar": "/uview-ui/components/u-avatar/u-avatar",
+    "u-gap": "/uview-ui/components/u-gap/u-gap",
     "star-rating": "/components/star-rating/star-rating",
     "u-upload": "/uview-ui/components/u-upload/u-upload",
+    "u-button": "/uview-ui/components/u-button/u-button",
     "u-skeleton": "/uview-ui/components/u-skeleton/u-skeleton"
   }
 }

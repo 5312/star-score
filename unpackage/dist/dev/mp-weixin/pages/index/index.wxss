@@ -33,11 +33,10 @@ page .main {
   height: 100%;
 }
 page .main .tops {
-  height: 30%;
+  height: 32%;
   text-align: center;
   background-color: #4463f0;
   padding: 20rpx;
-  margin-bottom: 20rpx;
 }
 page .main .tops .logo {
   width: 200rpx;
@@ -62,9 +61,11 @@ page .main .tops .address .addimg {
   width: 30rpx;
   height: 30rpx;
   font-weight: 700;
-  margin-right: 20rpx;
 }
 page .main .tops .address .addtext {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 24rpx;
   color: #b8b9e6;
 }
@@ -126,10 +127,6 @@ page .main .content .btn {
 }
 page .main .content .btn .logoin {
   background-color: #dd524d;
-  color: #fff;
-}
-page .main .content .btn .btnn {
-  background-color: #4463f0;
   color: #fff;
 }
 page .main .content .bottom {

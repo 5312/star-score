@@ -102,7 +102,7 @@ try {
       return __webpack_require__.e(/*! import() | uview-ui/components/u-line/u-line */ "uview-ui/components/u-line/u-line").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-line/u-line.vue */ 103))
     },
     uLoadmore: function() {
-      return __webpack_require__.e(/*! import() | uview-ui/components/u-loadmore/u-loadmore */ "uview-ui/components/u-loadmore/u-loadmore").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-loadmore/u-loadmore.vue */ 136))
+      return __webpack_require__.e(/*! import() | uview-ui/components/u-loadmore/u-loadmore */ "uview-ui/components/u-loadmore/u-loadmore").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-loadmore/u-loadmore.vue */ 110))
     }
   }
 } catch (e) {
@@ -283,9 +283,9 @@ var _default =
 {
   data: function data() {
     return {
-      status: 'nomore',
+      status: 'loadmore',
       loadText: {
-        loadmore: '轻轻上拉',
+        loadmore: '点击加载更多',
         loading: '努力加载中',
         nomore: '实在没有了' },
 
@@ -294,7 +294,7 @@ var _default =
       admin_f: null,
       width: '90%',
       select: 0,
-      page: 0,
+      page: 1,
       group: [],
 
 
@@ -331,30 +331,46 @@ var _default =
   methods: {
     loadmore: function loadmore() {
       this.page += 1;
+
       this.getDetail(this.page);
     },
     getDetail: function getDetail(page) {var _this = this;
+      this.status = 'loading';
       // 评论列表
       this.$api.list({
         shop_id: this.shop_id,
-        type: this.select
-        // page:page
-      }).then(function (res) {
-        console.log(res.data.list.data);
-        _this.group = res.data.list.data,
+        type: this.select,
+        page: page }).
+      then(function (res) {
+        if (res.data.list.data.length != 0) {
+
+          _this.status = 'loadmore';
+        } else {
+          _this.status = 'nomore';
+          // return
+        }
+        var list = res.data.list.data;
+        list.forEach(function (x, y) {
+          _this.group.push(x);
+        });
+
         // 全部
-        _this.category[0].num = res.data.list.zong[0];
+        _this.category[0].num = res.data.zong[0];
         // 好评
-        _this.category[1].num = res.data.list.zong[1];
+        _this.category[1].num = res.data.zong[1];
         // 中评
-        _this.category[2].num = res.data.list.zong[2];
+        _this.category[2].num = res.data.zong[2];
         // 差评
-        _this.category[3].num = res.data.list.zong[3];
+        _this.category[3].num = res.data.zong[3];
+
       });
+
     },
     onSelect: function onSelect(y) {
       this.select = y; // 选中
-      this.getDetail(0);
+      this.page = 1; // 切换时 页码归零
+      this.group = []; // 清空
+      this.getDetail(this.page);
     } } };exports.default = _default;
 
 /***/ }),

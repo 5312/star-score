@@ -104,9 +104,9 @@
 	export default {
 		data() {
 			return {
-				status:'nomore',
+				status:'loadmore',
 				loadText: {
-					loadmore: '轻轻上拉',
+					loadmore: '点击加载更多',
 					loading: '努力加载中',
 					nomore: '实在没有了'
 				},
@@ -115,7 +115,7 @@
 				admin_f:null,
 				width:'90%',
 				select:0,
-				page:0,
+				page:1,
 				group:[
 					
 				],
@@ -152,30 +152,46 @@
 		methods: {
 			loadmore(){
 				this.page+=1;
+				
 				this.getDetail(this.page)
 			},
 			getDetail(page){
+				this.status = 'loading'
 				// 评论列表
 				this.$api.list({
 					shop_id:this.shop_id,
 					type:this.select,
-					// page:page
+					page:page
 				}).then(res => {
-					console.log(res.data.list.data)
-					this.group = res.data.list.data,
+					if(res.data.list.data.length != 0){
+						
+						this.status = 'loadmore'
+					}else{
+						this.status = 'nomore'
+						// return
+					}
+					let list = res.data.list.data
+					list.forEach((x,y) => {
+						this.group.push(x)
+					})
+					
 					// 全部
-					this.category[0].num = res.data.list.zong[0];
+					this.category[0].num = res.data.zong[0];
 					// 好评
-					this.category[1].num = res.data.list.zong[1];
+					this.category[1].num = res.data.zong[1];
 					// 中评
-					this.category[2].num = res.data.list.zong[2];
+					this.category[2].num = res.data.zong[2];
 					// 差评
-					this.category[3].num = res.data.list.zong[3];
+					this.category[3].num = res.data.zong[3];
+					
 				})
+				
 			},
 			onSelect(y){
 				this.select = y;// 选中
-				this.getDetail(0)
+				this.page = 1  ;// 切换时 页码归零
+				this.group = []; // 清空
+				this.getDetail(this.page)
 			}
 		}
 	}

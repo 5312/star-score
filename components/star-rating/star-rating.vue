@@ -1,6 +1,6 @@
 <template>
-	<view class="star-rating">
-		<view class="star-rating-box" @touchstart='fun' @touchmove.stop.prevent='fun'>
+	<view class="star-rating" >
+		<view class="star-rating-box" @touchstart='fun' @touchmove.stop.prevent='fun' >
 			<image v-for="(item,i) in 10" :key="i" class="icon-start" :src="(i+1)|getSrc(score)" mode=""></image>
 		</view>
 		<text class="star-rating-title">{{title}}</text>
@@ -74,7 +74,6 @@
 	.star-rating {
 		display: flex;
 		align-items: center;
-
 		.icon-start {
 			width: 40rpx;
 			height: 40rpx;

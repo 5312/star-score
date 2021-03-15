@@ -76,7 +76,7 @@ async function getCode() {
 	const code = await uni.login({
 		provider: 'weixin',
 	})
-	console.log(code)
+	// console.log(code)
 	if (code[1]) {
 		// 以授权
 		const userInfo = await uni.getUserInfo({
@@ -108,10 +108,10 @@ export default {
 		add(data){
 			return minHttp.post(`/api/shopping/add`,data,load)
 		},
-		list(data){
+		list(data){// 评论列表
 			return minHttp.get(`/api/shopping/lists`,data,load)
 		},
-		shop(data){
+		shop(data){//商户列表
 			return minHttp.get(`/api/shop/lists`,data,load)
 		}
 	}

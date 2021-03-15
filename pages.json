@@ -37,6 +37,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/index/item-page",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

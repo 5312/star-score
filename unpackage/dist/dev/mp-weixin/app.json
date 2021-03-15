@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/auth/auth",
     "pages/evaluate/evaluate",
-    "pages/list/list"
+    "pages/list/list",
+    "pages/index/item-page"
   ],
   "subPackages": [],
   "window": {
@@ -13,5 +14,5 @@
     "backgroundColor": "#F8F8F8"
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap31.json"
+  "sitemapLocation": "sitemap90.json"
 }

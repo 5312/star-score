@@ -8329,15 +8329,15 @@ var load = {
 // 登录 获取token
 function getCode() {return _getCode.apply(this, arguments);}function _getCode() {_getCode = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var code, userInfo;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.next = 2;return (
               uni.login({
-                provider: 'weixin' }));case 2:code = _context2.sent;
+                provider: 'weixin' }));case 2:code = _context2.sent;if (!
 
-            console.log(code);if (!
-            code[1]) {_context2.next = 9;break;}_context2.next = 7;return (
+
+            code[1]) {_context2.next = 8;break;}_context2.next = 6;return (
 
               uni.getUserInfo({
-                provider: 'weixin' }));case 7:userInfo = _context2.sent;return _context2.abrupt("return",
+                provider: 'weixin' }));case 6:userInfo = _context2.sent;return _context2.abrupt("return",
 
-            [code[1], userInfo[1]]);case 9:case "end":return _context2.stop();}}}, _callee2);}));return _getCode.apply(this, arguments);}var _default =
+            [code[1], userInfo[1]]);case 8:case "end":return _context2.stop();}}}, _callee2);}));return _getCode.apply(this, arguments);}var _default =
 
 
 
@@ -8363,10 +8363,10 @@ function getCode() {return _getCode.apply(this, arguments);}function _getCode() 
     add: function add(data) {
       return minHttp.post("/api/shopping/add", data, load);
     },
-    list: function list(data) {
+    list: function list(data) {// 评论列表
       return minHttp.get("/api/shopping/lists", data, load);
     },
-    shop: function shop(data) {
+    shop: function shop(data) {//商户列表
       return minHttp.get("/api/shop/lists", data, load);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

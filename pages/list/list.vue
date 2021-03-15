@@ -1,37 +1,75 @@
 <template>
-	<view class="main">
-		<!-- <u-cell-group>
-			<u-cell-item 
-				:value='x.all'
-				:arrow="true"
-				:title="x.title" 
-				v-for="x,y in group"
-				:key='y'
-				:icon-style='style'
-			>
-				<u-icon slot="icon" size="60" margin-right='100rpx' :name="x.authurl"></u-icon>
-			</u-cell-item>
+	<view class="main u-skeleton">
+		<official-account  class="u-skeleton-rect" @load='load' @error='error'></official-account>
+		<view class="tops ">
+			<image v-if="!logoSrc" class="logo u-skeleton-circle" src=""></image>
+			<u-avatar v-else size="large" :src="logoSrc" mode="circle"></u-avatar>
 
-		</u-cell-group> -->
-		<view 
-			class="group flex j-between a-center "
-			hover-class='hover'
-			v-for="x,y in group"
-			:key='y'
-			@click="go(x.shop_id)"
-		>
-			<view class="flex a-center left">
-				<image :src="x.logo.file_path" class="img" mode=""></image>
-				<view class="title">
-					<text>{{ x.shop_name }}</text>
-					<view class="detail">{{ x.address }}</view>
-				</view>
+			<view class="text-area ">
+				<text class="titlehead u-skeleton-rect">{{detail.shop_name}}</text>
 			</view>
-			<view class="number flex j-start a-center">
-				<text>{{ x.net_f + x.admin_f }}</text>
-				<image class="image" :src="rankImage(x)" mode=""></image>
+			<view class="address u-skeleton-rect">
+				<image class="addimg" src="../../static/address.png" mode=""></image>
+				<text class="addtext ">{{detail.address}}</text>
+			</view>
+			<view class="star">
+				<text class="star-text">综合评分：</text>
+				<view class="vote-number">{{all}}</view>
+				<image class="jinpai" :src="jinpai" mode="" @click="evaluate"></image>
+				<!-- <view class="vote-star">
+					<view class="i" :style="{ width:width,height:'100%'}"></view>
+				</view> -->
 			</view>
 		</view>
+		<u-gap height="20" bg-color="#fff"></u-gap>
+		<view class="content ">
+			<view class="star-rating-box u-skeleton-rect" >
+				<view class="title fontSize14 color333">价格</view>
+				<star-rating @changeScore='changeScore'   name='scoreNum' :score='scoreNum'></star-rating>
+			</view>
+			<view class="star-rating-box">
+				<view class="title fontSize14 color333">质量</view>
+				<star-rating @changeScore='changeScore' name='punctualNum' :score='punctualNum'></star-rating>
+			</view>
+			<view class="star-rating-box">
+				<view class="title fontSize14 color333">售后</view>
+				<star-rating @changeScore='changeScore' name='serviceNum' :score='serviceNum'></star-rating>
+			</view>
+			<view class="star-rating-box">
+				<view class="title fontSize14 color333">顾客</view>
+				<star-rating @changeScore='changeScore' name='peop' :score='peop'></star-rating>
+			</view>
+			<view class="star-rating-box">
+				<view class="title fontSize14 color333">安全</view>
+				<star-rating @changeScore='changeScore' name='safe' :score='safe'></star-rating>
+			</view>
+			<view class="star-rating-box">
+				<view class="title fontSize14 color333">环境</view>
+				<star-rating @changeScore='changeScore' name='ambient' :score='ambient'></star-rating>
+			</view>
+			<view class="textarea u-skeleton-rect">
+				<textarea class="text-center" v-model="msg" placeholder="写几句评价吧..." />
+				<!-- 上传 -->
+				<u-upload 
+				ref="uUpload" 
+				:action="action" 
+				:form-data='header' 
+				name='image' 
+				:auto-upload="false" 
+				max-size='1024kb' 
+				@on-choose-complete='complete'
+				@on-remove="remove"
+				size-type='compressed'
+				></u-upload>
+			</view>
+			<view class="btn">
+				<!-- <button v-if="auth" open-type="getUserInfo" @getuserinfo='bindGetUserInfo' class="logoin" type="default" size="mini">点我登录</button> -->
+				<u-button   :type="types" @click="submit" size="mini">提交评价</u-button>
+			</view>
+			<view class="bottom">主办单位:习水县市场监督管理局</view>
+		</view>
+		<!--引用组件-->
+		<u-skeleton :loading="loading" :animation="true" bgColor="#FFF"></u-skeleton>
 	</view>
 </template>
 
@@ -39,80 +77,361 @@
 	export default {
 		data() {
 			return {
-				style:{
-					// marginRight:'20rpx'
+				header:{
+					wxapp_id:'10001'
 				},
-				group:[
-				
-				]
-			}
-		},
-		onLoad(options){
-			this.$api.shop({
-				page_id:0,
-			}).then(res => {
-				this.group = res.data.list;	
-				
-			})
+				shop_id:'',
+				title: '邢老三肉丸胡辣汤',
+				scoreNum: 0, //价格
+				punctualNum: 0, //质量
+				serviceNum: 0, //售后
+				ambient: 0, //环境
+				peop: 0, //顾客
+				safe: 0, //安全
+				detail:{
+					shop_name:'九家泡馍1',
+					address:'习水县啊啊啊街道1'
+				},
+				all:'',//综合评分
+				logoSrc:'',// 头像
+				msg:'',// 评价
+				loading: true, // 是否显示骨架屏组件
+				jinpai:'',// 金牌路径
+				type:"",
+				action: 'https://xishui.ydeshui.com/index.php?s=/api/shopping/base64',
+				upload:[],
+			};
 		},
 		computed:{
-			rankImage(e){
-				 return function (x) {
-				       let sum = x.net_f +x.admin_f;				       
-				       if(sum >= 80) return '../../static/star-rating/jinpai.png';
-				       if(sum >= 70 && sum <= 79) return '../../static/star-rating/yinpai.png';
-				       if(sum >= 60 && sum <= 69) return'../../static/star-rating/tongse.png';
-				       if(sum < 60) return '../../static/star-rating/heipai.png';
-				 }
-			 }
+			types(){
+				if(this.scoreNum && this.punctualNum && this.serviceNum && this.peop && this.safe && this.ambient && this.msg ){
+					return 'primary'
+				}else{
+					return 'default'
+				}
+				
+			}
+			
+			
+		},
+		onLoad(option) {
+			let q = option.q ? decodeURIComponent(option.q) : null;
+			
+			if(option.shopid){
+				this.shop_id = option.shopid
+				//授权状态判断
+				this.authSet()
+				return
+			}else if (q) {
+				let a = q.split('?')[1]
+				if (a && a.length > 0) {
+					let b = a.split('=')
+					if (b && b.length > 0 && b[0] == 'shopid') {
+						this.shop_id = b[1] || '10002';
+						// //授权状态判断
+						this.authSet()
+					}
+				}
+			}else{
+				//评价
+				uni.reLaunch({
+				    url: `../index/index`,
+				});
+			}
+		}, 
+		onShareAppMessage (){
+			
 		},
 		methods: {
-			go(options){
-				uni.reLaunch({
-					url:`../index/index?shopid=${options}`
+			load(e){
+				console.log(e)
+			},
+			error(e){
+				console.log(e)
+			},
+			remove(index,lists,name){
+				this.upload.splice(index,1);
+			},
+			complete(lists,name){
+				let that = this;
+				that.upload = [];
+				lists.forEach( (x,y)=>{
+					console.log(y)
+					let path = x.url;
+					 uni.getFileSystemManager().readFile({
+						 filePath:path,
+						 encoding:'base64',
+						 success: r => {
+							 // console.log(r.data)
+							 that.upload.push(r.data)
+						 }
+					 })
 				})
-			}
+			},
+			evaluate(){
+				//评价
+				uni.navigateTo({
+				    url: `../evaluate/evaluate?net_f=${this.detail.net_f}&admin_f=${this.detail.admin_f}&jinpai=${this.jinpai}&shopid=${this.shop_id}&type=${this.type}`,
+				});
+			},
+			alls(){
+				/**
+				 * 最高为10颗星满分100分，一颗星对应为10分。
+				 * 评分结果分为金牌、银牌、铜牌、黑牌四个等级。
+				 * 评分得分80分至100分为金牌，70至79为银牌，60至69为铜牌，
+				 * 60分以下为黑牌。价格诚信20分、质量诚信40分、售后诚信10分、
+				 * 顾客满意度10分、安全生产10分、生态环保10分。
+				 */
+				// 综合评分计算
+				// let a = 60 * 1 * 0.2; // 权重
+				// let b = 70 * 1 * 0.4; // 权重
+				// let c = 90 * 1 * 0.1; // 权重
+				// let d = 100 * 1 * 0.1; // 权重
+				// let e = 90 * 1 * 0.1; // 权重
+				// let f = 100 * 1 * 0.1; // 权重
+				let sum = this.detail.net_f + this.detail.admin_f;
+				this.all = sum + '分';
+				
+				if(sum >= 80) {
+					this.type='金牌';
+					 this.jinpai = '../../static/star-rating/jinpai.png';
+				};
+				if(sum >= 70 && sum <= 79){
+					 this.type = '银牌'; 
+					 this.jinpai = '../../static/star-rating/yinpai.png';
+				}
+				if(sum >= 60 && sum <= 69){
+					 this.type = '铜牌'; 
+					 this.jinpai = '../../static/star-rating/tongse.png';
+				}
+				if(sum < 60) {
+					this.type = '黑牌'; 
+					this.jinpai = '../../static/star-rating/heipai.png';
+				}
+
+			},
+			authSet(){//授权状态判断
+				let that = this;
+				uni.getSetting({
+					success(res) {
+						let auth = res.authSetting['scope.userInfo'];
+						// console.log(auth)
+						if(auth){
+							that.logoin();
+						}else{
+							uni.navigateTo({
+								url: '../auth/auth?shopid='+that.shop_id,
+								animationType: 'pop-in',
+								animationDuration: 200,
+								success(e){
+									console.log(e)
+								},
+								fail(e){
+									console.log(e)
+								}
+							});
+						}
+					}
+				})
+			},
+			logoin(){// 登录
+				let that = this;
+				this.$api.login().then(res => {
+					// 缓存toekn
+					this.$cache.set('_token',res.data.token);
+					this.loading = false;
+					// 获取商户详情
+					this.$api.detail({
+						shop_id:that.shop_id
+					}).then( r => {
+						// console.log(r.data.detail)
+						that.detail = r.data.detail
+						that.logoSrc = r.data.detail.logo.file_path;
+						// 综合计算
+						that.alls();
+					})
+				}).catch(e => {
+					console.log(e)
+				});
+				
+			},
+			submit(){
+				// 提交
+				let that = this;
+				if(this.scoreNum ==0 || this.punctualNum==0||this.serviceNum==0||this.peop==0||this.safe==0||this.ambient==0){
+					uni.showToast({
+						title:"请评价商家",
+						icon:'none'
+					})
+					return
+				}
+				if(!this.msg){
+					uni.showToast({
+						title:'请填写评论',
+						icon:'none'
+					})
+					return
+				}
+				
+				this.$api.add({
+					shop_id:that.shop_id,
+					msg:that.msg,
+					p1:that.scoreNum * 10,
+					p2:that.punctualNum * 10,
+					p3:that.serviceNum * 10,
+					p4:that.peop * 10,
+					p5:that.safe * 10,
+					p6:that.ambient * 10,
+					images:this.upload
+				}).then(res => {
+					uni.showToast({
+						title: res.data,
+						icon: res.msg == 'success' ? 'success' : "none",
+						mask:  false,
+						duration:1500,
+						complete: () => {
+							setTimeout(() => {
+								uni.hideToast();
+								//评价
+								uni.reLaunch({
+								    url: `../index/index`,
+								});
+							}, 2000)
+						}
+					});
+				})
+			},
+			changeScore(param) {
+				this[param.name] = param.score;
+			},
 		}
 	}
 </script>
 
 <style lang="scss">
 page{
-	.main{
-		.group{
+		height: 100%;
+	
+	$blue:#4463f0;
+	$bluetext:#fff;
+	.main {
+		width: 100%;
+		height: 100%;
+		.tops {
+			height: 32%;
+			text-align: center;
+			background-color: $blue;
 			padding:20rpx;
-			border-bottom: 1px solid #e4e7ed;
-			color: #606266;
-			.left{
-				.title{
-					font-weight: 600;
-					font-size: $uni-font-size-lg;
-					color: $uni-text-color;
-					margin-left: 20rpx;
-					.detail{
-						white-space: nowrap;
-						width:400rpx;
-						overflow: hidden;
-						text-overflow:ellipsis ;
-						font-size: $uni-font-size-sm;
-						color: $uni-text-color-disable;
-						font-weight: 400;
-					}
+			// margin-bottom: 20rpx;
+			.logo {
+				width: 200rpx;
+				height: 200rpx;
+				border-radius: 50%;
+				overflow: hidden;
+			}
+			.address{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding:20rpx;
+				margin-top: 20rpx;
+				.addimg {
+					width: 30rpx;
+					height: 30rpx;
+					font-weight: 700;
 				}
-				.img{
-					width:100rpx;
+				.addtext{
+					// max-width: 600rpx;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					font-size: $uni-font-size-sm;
+					color: #b8b9e6;
+				}
+			}
+			.star{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
+				.jinpai{
+					width: 100rpx;
 					height: 100rpx;
+				}
+				.star-text{
+					color: #fff;
+				}		
+				.vote-number {
+				  vertical-align: middle;
+				  font-family: 微软雅黑, Verdana, Geneva, sans-serif;
+				  font-size: 12px;
+				  color: #fff;
 				}
 			}
 			
-			.number{
-				color:#909399;
-				.image{
-					width:100rpx;
-					height:100rpx;
+		}
+
+		.content {
+			// height: 70%;
+			background-color: $uni-bg-color-grey;
+			padding-bottom: 40rpx;
+			.textarea{
+				border-top: 1px solid $uni-border-color;
+				padding:20rpx;
+				margin-bottom: 30rpx;
+				background-color: $uni-bg-color;
+				.text-center{
+					width:100%;
+					height: 100rpx;
 				}
 			}
+			.star-rating-box{
+				background-color: $uni-bg-color;
+				display: flex;
+				justify-content: star;
+				align-items: center;
+				padding:10rpx ;
+				padding-left: 20rpx;
+			}
+			.btn{
+				text-align: center;
+				margin: 40rpx 0;
+				.logoin{
+					background-color:$uni-color-error;
+					color: #fff;
+				}
+				// .color{
+				// 	background-color: #4463f0;
+				// 	color: #fff;
+				// }
+				// .btnn{
+				// 	background-color:$uni-bg-color-grey;
+				// 	// color: #fff;
+				// }
+			}
+			.bottom{
+				text-align: center;
+				color: $uni-text-color-grey;
+				font-size: $uni-font-size-sm;
+				
+			}
 		}
+	}
+
+
+	.text-area {
+		margin-bottom: 20rpx;
+		display: flex;
+		justify-content: center;
+		.titlehead{
+			font-size:$uni-font-size-lg;
+			color: $bluetext;
+		}
+	}
+
+	.title {
+		font-size: 36rpx;
+		color: #000;
 	}
 }
 </style>
